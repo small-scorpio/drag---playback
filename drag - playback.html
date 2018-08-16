@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{margin: 0;padding: 0;}
+        #box{width:100px;height: 100px;background: #ff211a;position:absolute;}
+        #btn{font-size: 14px;color: #666;width: 54px;height: 24px;border:1px #666 solid;border-radius:4px;position: absolute;top: 20px;right:40px;background: #fff;outline: none;cursor:pointer;}
+    </style>
+</head>
+<body>
+<div id="box"></div>
+<input type="button" id="btn" value="回放">
+<script>
+        var arrT = [];
+        var arrL = [];
+        box.onmousedown = function (e) {
+                var l = e.clientX - box.offsetLeft;
+                var t = e.clientY - box.offsetTop;
+                arrL.push(box.offsetLeft);
+                arrT.push(box.offsetTop);
+            document.onmousemove = function (ev1) {
+                    var e1 = ev1 || event;
+                    var needL = e1.clientX - l;
+                    var needT = e1.clientY - t;
+                    var maxL = innerWidth - box.offsetWidth;
+                    var maxT = innerHeight - box.offsetHeight;
+                    if(needL < 0){
+                        needL = 0;
+                    }
+                    if(needT < 0){
+                        needT = 0;
+                    }
+                    if(needT > maxT){
+                        needT = maxT;
+                    }
+                    if(needL > maxL){
+                        needL = maxL;
+                    }
+                    arrL.push(needL);
+                    arrT.push(needT);
+                    box.style.left = needL + 'px';
+                    box.style.top = needT + 'px';
+                };
+            document.onmouseup = function () {
+                document.onmousemove = null;
+                document.onmouseup = null;
+                }
+        };
+        btn.onclick = function () {
+           var t = null;
+           clearInterval(t);
+           t = setInterval(function () {
+               box.style.top = arrT.pop() + 'px';
+               box.style.left = arrL.pop() + 'px';
+               if(arrT.length == 0 && arrL.length == 0){
+                   clearInterval(t);
+                   return;
+               }
+           },20);
+        };
+
+</script>
+</body>
+</html>
